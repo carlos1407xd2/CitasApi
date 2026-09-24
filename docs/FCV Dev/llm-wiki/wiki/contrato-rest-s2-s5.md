@@ -14,7 +14,11 @@ actualizar la especificación Scrum correspondiente.
 
 ## Fases de contrato
 
-1. S2: registro, login, refresh y logout — **bloqueado parcialmente por DEC-001**.
+1. S2: `POST /api/v1/auth/register` recibe nombres, apellidos, documento,
+   email, teléfono, contraseña e `insurancePlanId` opcional; devuelve 201 sin
+   password ni nombres de catálogos. Un plan inexistente/inactivo devuelve 400
+   y duplicados devuelven 409. Login, refresh y logout se añadirán de forma
+   compatible en esta familia de rutas.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.

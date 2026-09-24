@@ -11,3 +11,8 @@
 - 2026-09-24 — LINT — Se revisó el cambio de bootstrap y la separación de
   dominio/configuración. — Resultado: sin secretos versionados; DEC-001 sigue
   abierta.
+- 2026-09-24 — DECISIÓN — El usuario autorizó generar `membership_number`
+  sintético de laboratorio en backend para afiliación inicial opcional.
+- 2026-09-24 — LEARN — Registro USER y afiliación opcional implementados y
+  verificados contra MySQL con datos sintéticos. — Resultado: 201 con/sin
+  plan, 400 por plan inválido, 409 por duplicado y cuatro pruebas verdes.

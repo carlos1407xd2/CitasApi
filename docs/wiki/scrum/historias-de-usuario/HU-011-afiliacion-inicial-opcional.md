@@ -2,7 +2,7 @@
 id: HU-011
 tipo: historia-de-usuario
 titulo: "Afiliación inicial opcional"
-estado: Bloqueada
+estado: En desarrollo
 epica: "[[EP-002-catalogos-y-oferta]]"
 esfuerzo: Alto
 sprint_sugerido: "Incremento 2"
@@ -39,6 +39,12 @@ dependencias:
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 | Bloqueada | [[DEC-001-afiliacion-inicial-opcional]] | Falta definir contrato de afiliación. |
-| CA-02 | Bloqueada | [[DEC-001-afiliacion-inicial-opcional]] | La tabla requiere `membership_number` y el alcance no lo aporta. |
-| CA-03 | Pendiente | — | No existe API. |
+| CA-01 | Cumple backend | `RegisterUserService`, validación MySQL | Registro sin plan devolvió 201 y no creó afiliación. |
+| CA-02 | Cumple backend | `JpaUserRegistrationAdapter`, validación MySQL | Plan activo creó una FK y `membership_number` sintético; `users` no guarda nombres de catálogo. |
+| CA-03 | Cumple backend | `mvn test`, validación manual | Plan inexistente devolvió 400; prueba unitaria cubre plan inactivo. |
+| DoD-01 | Cumple | [[DEC-001-afiliacion-inicial-opcional]] | Política y contrato aprobados. |
+| DoD-02 | Pendiente | `citas-web/AGENTS.md` | Falta catálogo REST de planes y frontend aprobado; pruebas frontend no aplicables aún. |
+
+## Historial de validación
+
+- 2026-09-24 — Backend validado; HU permanece en desarrollo hasta completar cliente REST y pruebas frontend.

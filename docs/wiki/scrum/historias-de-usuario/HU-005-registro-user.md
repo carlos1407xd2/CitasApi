@@ -2,7 +2,7 @@
 id: HU-005
 tipo: historia-de-usuario
 titulo: "Registro de USER"
-estado: Bloqueada
+estado: En validación
 epica: "[[EP-001-fundacion-y-seguridad]]"
 esfuerzo: Alto
 sprint_sugerido: "Incremento 1"
@@ -35,5 +35,11 @@ dependencias:
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 | Bloqueada | [[DEC-001-afiliacion-inicial-opcional]] | El alcance S3 modifica el request con un dato no resuelto. |
-| CA-02 | Pendiente | — | No existe API. |
+| CA-01 | Cumple | `AuthController`, `RegisterUserService`, `mvn test` | Registro sintético validado contra MySQL con respuesta 201 y BCrypt. |
+| CA-02 | Cumple | `JpaUserRegistrationAdapter`, validación manual | Email duplicado respondió 409 controlado. |
+| DoD-01 | Cumple | `docs/FCV Dev/llm-wiki/wiki/contrato-rest-s2-s5.md` | Contrato aprobado y documentado. |
+| DoD-02 | Cumple | `mvn test` | Cuatro pruebas backend verdes. |
+
+## Historial de validación
+
+- 2026-09-24 — Backend implementado y validado; pendiente revisión independiente para cierre.
