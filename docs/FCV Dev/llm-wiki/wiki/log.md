@@ -16,3 +16,9 @@
 - 2026-09-24 — LEARN — Registro USER y afiliación opcional implementados y
   verificados contra MySQL con datos sintéticos. — Resultado: 201 con/sin
   plan, 400 por plan inválido, 409 por duplicado y cuatro pruebas verdes.
+- 2026-09-24 — LEARN — Se añadió el catálogo público de planes activos como
+  extensión compatible del contrato de registro. — Resultado: el cliente
+  consume `{id, name}` sin duplicar nombres de catálogo en `users`.
+- 2026-09-24 — LINT — Contrato cruzado validado. — Resultado: cinco pruebas
+  Maven, tres pruebas Vitest, typecheck y build pasaron; `GET` local respondió
+  `200` con exclusivamente planes activos.

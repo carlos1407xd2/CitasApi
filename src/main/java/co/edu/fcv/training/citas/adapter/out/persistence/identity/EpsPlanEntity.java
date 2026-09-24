@@ -13,11 +13,21 @@ class EpsPlanEntity {
     private Long id;
     @Column(nullable = false)
     private boolean active;
+    @Column(nullable = false)
+    private String name;
 
     protected EpsPlanEntity() {
     }
 
     boolean isActive() {
         return active;
+    }
+
+    Long id() {
+        return id;
+    }
+
+    String name() {
+        return name;
     }
 }

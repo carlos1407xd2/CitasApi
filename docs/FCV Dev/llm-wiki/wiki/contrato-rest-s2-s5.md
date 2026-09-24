@@ -19,6 +19,10 @@ actualizar la especificación Scrum correspondiente.
    password ni nombres de catálogos. Un plan inexistente/inactivo devuelve 400
    y duplicados devuelven 409. Login, refresh y logout se añadirán de forma
    compatible en esta familia de rutas.
+   `GET /api/v1/catalogs/insurance-plans` es público y devuelve únicamente
+   planes activos, ordenados por nombre, con `{id, name}`. Es un contrato
+   aditivo para que el registro pueda enviar el identificador FK opcional;
+   no devuelve ni acepta números de póliza.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.

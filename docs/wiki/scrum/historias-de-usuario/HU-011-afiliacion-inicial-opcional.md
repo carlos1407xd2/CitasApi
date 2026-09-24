@@ -2,7 +2,7 @@
 id: HU-011
 tipo: historia-de-usuario
 titulo: "Afiliación inicial opcional"
-estado: En desarrollo
+estado: En validación
 epica: "[[EP-002-catalogos-y-oferta]]"
 esfuerzo: Alto
 sprint_sugerido: "Incremento 2"
@@ -43,8 +43,8 @@ dependencias:
 | CA-02 | Cumple backend | `JpaUserRegistrationAdapter`, validación MySQL | Plan activo creó una FK y `membership_number` sintético; `users` no guarda nombres de catálogo. |
 | CA-03 | Cumple backend | `mvn test`, validación manual | Plan inexistente devolvió 400; prueba unitaria cubre plan inactivo. |
 | DoD-01 | Cumple | [[DEC-001-afiliacion-inicial-opcional]] | Política y contrato aprobados. |
-| DoD-02 | Pendiente | `citas-web/AGENTS.md` | Falta catálogo REST de planes y frontend aprobado; pruebas frontend no aplicables aún. |
+| DoD-02 | Cumple | `citas-web/src/lib/api.test.ts`, `npm test`, `npm run lint`, `npm run build` | El cliente carga catálogo activo, registra con/sin plan y sus pruebas pasan. |
 
 ## Historial de validación
 
-- 2026-09-24 — Backend validado; HU permanece en desarrollo hasta completar cliente REST y pruebas frontend.
+- 2026-09-24 — Cliente REST reconciliado contra el diseño AI Studio aprobado; queda pendiente revisión independiente para cierre.
