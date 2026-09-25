@@ -5,6 +5,7 @@ import co.edu.fcv.training.citas.domain.identity.InvalidInsurancePlanException;
 import co.edu.fcv.training.citas.domain.appointment.AppointmentBookingException;
 import co.edu.fcv.training.citas.domain.professional.ProfessionalAdministrationException;
 import co.edu.fcv.training.citas.domain.availability.AvailabilityBlockAdministrationException;
+import co.edu.fcv.training.citas.domain.appointment.AppointmentLifecycleException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,16 @@ class ApiExceptionHandler {
         HttpStatus status = switch (exception.code()) {
             case "BLOCK_OVERLAP", "BLOCK_HAS_APPOINTMENTS" -> HttpStatus.CONFLICT;
             case "BLOCK_NOT_FOUND", "PROFESSIONAL_NOT_FOUND", "LOCATION_NOT_ASSIGNED" -> HttpStatus.NOT_FOUND;
+            default -> HttpStatus.BAD_REQUEST;
+        };
+        return error(status, exception.code());
+    }
+
+    @ExceptionHandler(AppointmentLifecycleException.class)
+    ResponseEntity<ApiError> lifecycleError(AppointmentLifecycleException exception) {
+        HttpStatus status = switch (exception.code()) {
+            case "APPOINTMENT_NOT_FOUND" -> HttpStatus.NOT_FOUND;
+            case "APPOINTMENT_NOT_FUTURE", "INVALID_STATUS_TRANSITION" -> HttpStatus.CONFLICT;
             default -> HttpStatus.BAD_REQUEST;
         };
         return error(status, exception.code());

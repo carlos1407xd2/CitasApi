@@ -70,6 +70,12 @@ La contraseña temporal solo se recibe, se hashea y nunca se devuelve.
   rollback documentado antes de ejecutarse.
 - El cliente se adapta a respuestas aditivas antes de eliminar campos o rutas.
 
+## Ciclo de vida USER
+
+- `GET /api/v1/appointments` lista únicamente las citas del usuario autenticado y acepta `status`, `from` y `to` opcionales.
+- `GET /api/v1/appointments/{id}` y `GET /api/v1/appointments/{id}/history` exponen detalle e historial solo al propietario.
+- `POST /api/v1/appointments/{id}/cancel` cambia una cita propia futura `REQUESTED` o `APPROVED` a `CANCELLED`, libera sus slots y registra historial en la misma transacción. Citas ajenas, pasadas o terminales no se modifican.
+
 ## Agenda del profesional
 
 Las operaciones del profesional sobre su propia agenda son:
