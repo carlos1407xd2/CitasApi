@@ -4,7 +4,7 @@ import co.edu.fcv.training.citas.application.appointment.AppointmentBookingPort;
 import co.edu.fcv.training.citas.application.appointment.BookAppointmentCommand;
 import co.edu.fcv.training.citas.application.appointment.BookedAppointment;
 import co.edu.fcv.training.citas.application.appointment.AppointmentLifecyclePort;
-import co.edu.fcv.training.citas.domain.appointment.AppointmentLifecycleException;
+import co.edu.fcv.training.citas.application.appointment.ReschedulePort;
 import java.time.LocalDate;
 import java.util.List;
 import java.net.URI;
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 class AppointmentController {
     private final AppointmentBookingPort booking;
     private final AppointmentLifecyclePort lifecycle;
-    AppointmentController(AppointmentBookingPort booking, AppointmentLifecyclePort lifecycle) { this.booking = booking; this.lifecycle = lifecycle; }
+    private final ReschedulePort reschedule;
+    AppointmentController(AppointmentBookingPort booking, AppointmentLifecyclePort lifecycle, ReschedulePort reschedule) { this.booking = booking; this.lifecycle = lifecycle; this.reschedule = reschedule; }
 
     @org.springframework.web.bind.annotation.GetMapping
     List<AppointmentLifecyclePort.AppointmentSummary> list(Authentication authentication,
@@ -47,6 +48,12 @@ class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @org.springframework.web.bind.annotation.PostMapping("/{id}/reschedule-requests")
+    ResponseEntity<RescheduleResponse> requestReschedule(Authentication authentication, @org.springframework.web.bind.annotation.PathVariable Long id, @RequestBody RescheduleRequest request) {
+        Long requestId = reschedule.requestReschedule(userId(authentication), id, request.locationId(), request.startAt());
+        return ResponseEntity.status(201).body(new RescheduleResponse(requestId, "PENDING"));
+    }
+
     @PostMapping
     ResponseEntity<BookingResponse> book(Authentication authentication, @RequestBody BookingRequest request) {
         Long userId = userId(authentication);
@@ -60,6 +67,8 @@ class AppointmentController {
                           LocalDateTime startAt, String reason) {}
     record BookingResponse(Long appointmentId, String status) {}
     record CancelRequest(String reason) {}
+    record RescheduleRequest(Long locationId, LocalDateTime startAt) {}
+    record RescheduleResponse(Long requestId, String status) {}
     private Long userId(Authentication authentication) {
         try { return Long.valueOf(authentication.getName()); }
         catch (RuntimeException e) { throw new IllegalStateException("Authenticated subject must be a user id", e); }

@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/api/v1/appointments/**").hasRole("USER")
                         .requestMatchers("/api/v1/admin/professionals/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/reschedule-requests/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/professional/**").hasRole("PROFESSIONAL")
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))

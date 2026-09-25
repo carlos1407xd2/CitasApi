@@ -75,6 +75,8 @@ La contraseña temporal solo se recibe, se hashea y nunca se devuelve.
 - `GET /api/v1/appointments` lista únicamente las citas del usuario autenticado y acepta `status`, `from` y `to` opcionales.
 - `GET /api/v1/appointments/{id}` y `GET /api/v1/appointments/{id}/history` exponen detalle e historial solo al propietario.
 - `POST /api/v1/appointments/{id}/cancel` cambia una cita propia futura `REQUESTED` o `APPROVED` a `CANCELLED`, libera sus slots y registra historial en la misma transacción. Citas ajenas, pasadas o terminales no se modifican.
+- `POST /api/v1/appointments/{id}/reschedule-requests` recibe `{locationId,startAt}` para una cita propia `APPROVED` futura. Retiene la nueva franja y conserva la original mientras la solicitud está `PENDING`; una segunda pendiente responde `409 RESCHEDULE_ALREADY_PENDING`.
+- ADMIN decide con `POST /api/v1/admin/reschedule-requests/{id}/approve` o `/reject`; aprobar intercambia franjas y rechazar libera la provisional. Ambas operaciones son transaccionales y registran el motivo de decisión.
 
 ## Agenda del profesional
 
