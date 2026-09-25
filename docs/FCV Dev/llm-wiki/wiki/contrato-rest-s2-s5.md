@@ -26,6 +26,10 @@ actualizar la especificación Scrum correspondiente.
    `GET /api/v1/catalogs/locations` y `GET /api/v1/catalogs/specialties`
    devuelven únicamente catálogos activos. Las especialidades incluyen su
    duración `30|60`, indicador de generalidad y si requieren aprobación ADMIN.
+   `GET /api/v1/availability?date=YYYY-MM-DD` devuelve slots libres del día.
+   Acepta filtros opcionales `locationId`, `specialtyId` y `professionalId`,
+   y responde identificadores y fechas `startAt/endAt`; no reserva ni retiene
+   slots. La reserva transaccional se implementará en el siguiente incremento.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.

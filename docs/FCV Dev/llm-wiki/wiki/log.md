@@ -25,3 +25,6 @@
 - 2026-09-25 — LEARN — Se publicaron sedes y especialidades activas como
   catálogos REST de solo lectura, sin migración nueva. — Resultado: son la
   base contractual para disponibilidad y reservas del incremento S4.
+- 2026-09-25 — LEARN — Se añadió consulta REST de slots libres por fecha y
+  filtros de oferta. — Resultado: lectura sin efectos laterales; la retención
+  transaccional queda explícitamente separada para el siguiente incremento.
