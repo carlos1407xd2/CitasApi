@@ -49,6 +49,12 @@ actualizar la especificación Scrum correspondiente.
 nuevo; `POST /api/v1/auth/logout` revoca ese refresh token. Solo se persiste
 el hash del token en `refresh_tokens`.
 
+Las operaciones ADMIN de profesionales son `POST /api/v1/admin/professionals`,
+`PUT /api/v1/admin/professionals/{id}/specialties`,
+`PUT /api/v1/admin/professionals/{id}/locations` y
+`PATCH /api/v1/admin/professionals/{id}/active`; todas requieren rol ADMIN.
+La contraseña temporal solo se recibe, se hashea y nunca se devuelve.
+
 ## Reglas compartidas confirmadas
 
 - Base URL configurable por entorno y versión `/api/v1`.
