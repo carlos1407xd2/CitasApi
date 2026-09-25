@@ -53,7 +53,7 @@ class ApiExceptionHandler {
     ResponseEntity<ApiError> lifecycleError(AppointmentLifecycleException exception) {
         HttpStatus status = switch (exception.code()) {
             case "APPOINTMENT_NOT_FOUND" -> HttpStatus.NOT_FOUND;
-            case "APPOINTMENT_NOT_FUTURE", "INVALID_STATUS_TRANSITION", "SLOT_NOT_AVAILABLE", "RESCHEDULE_ALREADY_PENDING" -> HttpStatus.CONFLICT;
+            case "APPOINTMENT_NOT_FUTURE", "INVALID_STATUS_TRANSITION", "SLOT_NOT_AVAILABLE", "RESCHEDULE_ALREADY_PENDING", "APPOINTMENT_NOT_FINISHED" -> HttpStatus.CONFLICT;
             case "LOCATION_NOT_ASSIGNED" -> HttpStatus.NOT_FOUND;
             default -> HttpStatus.BAD_REQUEST;
         };
