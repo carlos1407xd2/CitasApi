@@ -2,6 +2,7 @@ package co.edu.fcv.training.citas.adapter.in.web;
 
 import co.edu.fcv.training.citas.domain.identity.DuplicateUserException;
 import co.edu.fcv.training.citas.domain.identity.InvalidInsurancePlanException;
+import co.edu.fcv.training.citas.domain.appointment.AppointmentBookingException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ class ApiExceptionHandler {
     @ExceptionHandler({DuplicateUserException.class})
     ResponseEntity<ApiError> duplicateUser() {
         return error(HttpStatus.CONFLICT, "DUPLICATE_USER");
+    }
+
+    @ExceptionHandler(AppointmentBookingException.class)
+    ResponseEntity<ApiError> bookingError(AppointmentBookingException exception) {
+        HttpStatus status = "SLOT_NOT_AVAILABLE".equals(exception.code()) ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+        return error(status, exception.code());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

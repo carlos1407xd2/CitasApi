@@ -30,6 +30,11 @@ actualizar la especificación Scrum correspondiente.
    Acepta filtros opcionales `locationId`, `specialtyId` y `professionalId`,
    y responde identificadores y fechas `startAt/endAt`; no reserva ni retiene
    slots. La reserva transaccional se implementará en el siguiente incremento.
+   `POST /api/v1/appointments` requiere usuario autenticado y recibe
+   `professionalId`, `locationId`, `specialtyId`, `startAt` y `reason` opcional.
+   El usuario se obtiene del sujeto autenticado y no de `patientUserId` en el
+   payload. General responde `APPROVED`; especializada responde `REQUESTED`;
+   un slot ocupado responde `409 SLOT_NOT_AVAILABLE`.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.

@@ -28,3 +28,6 @@
 - 2026-09-25 — LEARN — Se añadió consulta REST de slots libres por fecha y
   filtros de oferta. — Resultado: lectura sin efectos laterales; la retención
   transaccional queda explícitamente separada para el siguiente incremento.
+- 2026-09-25 — DECISIÓN — La reserva obtiene `patientUserId` únicamente del
+  sujeto autenticado y nunca del payload. — Resultado: el contrato conserva
+  ownership; la activación requiere completar el proveedor JWT.
