@@ -43,6 +43,12 @@ actualizar la especificación Scrum correspondiente.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.
 
+## Refresh y logout
+
+`POST /api/v1/auth/refresh` recibe el refresh token y devuelve un access JWT
+nuevo; `POST /api/v1/auth/logout` revoca ese refresh token. Solo se persiste
+el hash del token en `refresh_tokens`.
+
 ## Reglas compartidas confirmadas
 
 - Base URL configurable por entorno y versión `/api/v1`.

@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/actuator/health/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/api/v1/auth/register", "/api/v1/catalogs/insurance-plans",
                                 "/api/v1/catalogs/locations", "/api/v1/catalogs/specialties",
-                                "/api/v1/availability", "/api/v1/auth/login")
+                                "/api/v1/availability", "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout")
                         .permitAll()
                         .requestMatchers("/api/v1/appointments/**").hasRole("USER")
                         .anyRequest().denyAll())
