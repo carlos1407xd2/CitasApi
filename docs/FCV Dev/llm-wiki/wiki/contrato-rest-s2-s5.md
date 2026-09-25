@@ -69,3 +69,14 @@ La contraseña temporal solo se recibe, se hashea y nunca se devuelve.
 - Cambios de esquema usan migraciones Flyway posteriores, compatibles y con
   rollback documentado antes de ejecutarse.
 - El cliente se adapta a respuestas aditivas antes de eliminar campos o rutas.
+
+## Agenda del profesional
+
+Las operaciones del profesional sobre su propia agenda son:
+
+- `GET /api/v1/professional/availability-blocks` devuelve sus bloques ordenados por fecha y hora.
+- `POST /api/v1/professional/availability-blocks` recibe `{locationId,date,startTime,endTime}`. La fecha no puede ser anterior al día actual, las horas deben caer en intervalos de 30 minutos y la ubicación debe estar asignada al profesional. Cada bloque crea slots atómicos de 30 minutos.
+- `PATCH /api/v1/professional/availability-blocks/{id}` permite cambiar datos del bloque o desactivarlo, únicamente si pertenece al profesional autenticado.
+- `DELETE /api/v1/professional/availability-blocks/{id}` elimina el bloque y sus slots libres. Los bloques con alguna cita no se pueden modificar ni eliminar y responden `409 BLOCK_HAS_APPOINTMENTS`.
+
+Estas rutas requieren rol `PROFESSIONAL`; el usuario se obtiene del sujeto JWT y nunca se acepta `professionalId` en el payload. Los solapamientos responden `409 BLOCK_OVERLAP` y las ubicaciones no asignadas responden `404 LOCATION_NOT_ASSIGNED`.

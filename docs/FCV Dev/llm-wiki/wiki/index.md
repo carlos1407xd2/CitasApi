@@ -1,12 +1,10 @@
-# Índice de conocimiento — FCV Citas
+# Indice de conocimiento - FCV Citas
 
-## Páginas
+## Paginas
 
-- [[estado-inicial]] — HECHO: inventario de repositorios y bloqueadores.
-- [[DEC-001-afiliacion-inicial-opcional]] — PREGUNTA ABIERTA: contrato de
-  afiliación al registrarse.
-- [[contrato-rest-s2-s5]] — DECISIÓN pendiente: plan cross-repo y
-  compatibilidad.
+- [[estado-inicial]] - HECHO: inventario de repositorios y bloqueadores.
+- [[DEC-001-afiliacion-inicial-opcional]] - PREGUNTA ABIERTA: contrato de afiliacion al registrarse.
+- [[contrato-rest-s2-s5]] - HECHO parcial: contrato REST S2-S5, incluyendo autenticacion, reservas y agenda profesional.
 
 ## Fuentes curadas
 
@@ -15,7 +13,6 @@
 - `../../../../../database/REQUISITOS_NORMALIZACION_3FN.md`
 - `../../wiki/scrum/README.md`
 
-## Operación
+## Operacion
 
-Leer este índice antes de una consulta sobre el proyecto. Tras una operación
-relevante, registrar un evento append-only en [[log]].
+Leer este indice antes de una consulta sobre el proyecto. Tras una operacion relevante, registrar un evento append-only en [[log]].

@@ -4,6 +4,7 @@ import co.edu.fcv.training.citas.domain.identity.DuplicateUserException;
 import co.edu.fcv.training.citas.domain.identity.InvalidInsurancePlanException;
 import co.edu.fcv.training.citas.domain.appointment.AppointmentBookingException;
 import co.edu.fcv.training.citas.domain.professional.ProfessionalAdministrationException;
+import co.edu.fcv.training.citas.domain.availability.AvailabilityBlockAdministrationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,16 @@ class ApiExceptionHandler {
     @ExceptionHandler(ProfessionalAdministrationException.class)
     ResponseEntity<ApiError> professionalError(ProfessionalAdministrationException exception) {
         HttpStatus status = "DUPLICATE_USER".equals(exception.code()) ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+        return error(status, exception.code());
+    }
+
+    @ExceptionHandler(AvailabilityBlockAdministrationException.class)
+    ResponseEntity<ApiError> availabilityBlockError(AvailabilityBlockAdministrationException exception) {
+        HttpStatus status = switch (exception.code()) {
+            case "BLOCK_OVERLAP", "BLOCK_HAS_APPOINTMENTS" -> HttpStatus.CONFLICT;
+            case "BLOCK_NOT_FOUND", "PROFESSIONAL_NOT_FOUND", "LOCATION_NOT_ASSIGNED" -> HttpStatus.NOT_FOUND;
+            default -> HttpStatus.BAD_REQUEST;
+        };
         return error(status, exception.code());
     }
 
