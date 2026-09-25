@@ -103,10 +103,16 @@ class JpaAppointmentBookingAdapter implements AppointmentBookingPort {
 
     private boolean areConsecutive(List<Tuple> slots) {
         for (int i = 1; i < slots.size(); i++) {
-            if (!((java.sql.Timestamp) slots.get(i - 1).get("endAt")).toLocalDateTime()
-                    .equals(((java.sql.Timestamp) slots.get(i).get("startAt")).toLocalDateTime())) return false;
+            if (!dateTime(slots.get(i - 1).get("endAt"))
+                    .equals(dateTime(slots.get(i).get("startAt")))) return false;
         }
         return true;
+    }
+
+    private LocalDateTime dateTime(Object value) {
+        if (value instanceof LocalDateTime localDateTime) return localDateTime;
+        if (value instanceof java.sql.Timestamp timestamp) return timestamp.toLocalDateTime();
+        throw new AppointmentBookingException("INVALID_SLOT_DATA");
     }
 
     private void validateCommand(BookAppointmentCommand command) {
