@@ -40,7 +40,8 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/health/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                                "/api/v1/auth/register", "/api/v1/catalogs/insurance-plans")
+                                "/api/v1/auth/register", "/api/v1/catalogs/insurance-plans",
+                                "/api/v1/catalogs/locations", "/api/v1/catalogs/specialties")
                         .permitAll()
                         .anyRequest().denyAll())
                 .build();

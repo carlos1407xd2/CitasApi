@@ -22,3 +22,6 @@
 - 2026-09-24 — LINT — Contrato cruzado validado. — Resultado: cinco pruebas
   Maven, tres pruebas Vitest, typecheck y build pasaron; `GET` local respondió
   `200` con exclusivamente planes activos.
+- 2026-09-25 — LEARN — Se publicaron sedes y especialidades activas como
+  catálogos REST de solo lectura, sin migración nueva. — Resultado: son la
+  base contractual para disponibilidad y reservas del incremento S4.

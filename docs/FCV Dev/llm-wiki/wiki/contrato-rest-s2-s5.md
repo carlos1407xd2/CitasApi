@@ -23,6 +23,9 @@ actualizar la especificación Scrum correspondiente.
    planes activos, ordenados por nombre, con `{id, name}`. Es un contrato
    aditivo para que el registro pueda enviar el identificador FK opcional;
    no devuelve ni acepta números de póliza.
+   `GET /api/v1/catalogs/locations` y `GET /api/v1/catalogs/specialties`
+   devuelven únicamente catálogos activos. Las especialidades incluyen su
+   duración `30|60`, indicador de generalidad y si requieren aprobación ADMIN.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.
