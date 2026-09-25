@@ -1,5 +1,7 @@
 # Log de la LLM Wiki
 
+- 2026-09-25 - LEARN - Se implementaron mis citas, historial, cancelacion y solicitudes de reprogramacion con decision ADMIN transaccional. - Resultado: 6 pruebas Maven verdes.
+
 - 2026-09-25 - LEARN - Se implemento la agenda propia del profesional con bloques solapamiento-validado y slots atomicos de 30 minutos. - Resultado: API compilada y 6 pruebas Maven verdes.
 
 - 2026-09-24 — INGEST — Se indexaron PRD, restricciones técnicas, requisitos
