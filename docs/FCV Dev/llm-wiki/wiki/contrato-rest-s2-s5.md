@@ -35,6 +35,10 @@ actualizar la especificación Scrum correspondiente.
    El usuario se obtiene del sujeto autenticado y no de `patientUserId` en el
    payload. General responde `APPROVED`; especializada responde `REQUESTED`;
    un slot ocupado responde `409 SLOT_NOT_AVAILABLE`.
+   `POST /api/v1/auth/login` recibe `email` y `password` y devuelve un access
+   JWT de corta duración con el sujeto de usuario y roles. El secreto se lee
+   exclusivamente desde `JWT_ACCESS_SECRET`; refresh/logout aún requieren su
+   siguiente incremento antes de declararse completos.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.

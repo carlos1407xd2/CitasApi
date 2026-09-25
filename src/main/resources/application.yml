@@ -42,3 +42,4 @@ app:
     frontend-origin: ${FRONTEND_ORIGIN:http://localhost:5173}
     access-token-minutes: ${JWT_ACCESS_MINUTES:15}
     refresh-token-days: ${JWT_REFRESH_DAYS:7}
+    access-token-secret: ${JWT_ACCESS_SECRET}

@@ -31,3 +31,6 @@
 - 2026-09-25 — DECISIÓN — La reserva obtiene `patientUserId` únicamente del
   sujeto autenticado y nunca del payload. — Resultado: el contrato conserva
   ownership; la activación requiere completar el proveedor JWT.
+- 2026-09-25 — LEARN — Se añadió login JWT access y validación Bearer con roles
+  desde `user_roles`; la API arrancó contra MySQL y health respondió `200`.
+  — Resultado: la reserva ya tiene la frontera de ownership definida.

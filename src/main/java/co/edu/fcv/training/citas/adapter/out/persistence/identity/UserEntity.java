@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-class UserEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +58,9 @@ class UserEntity {
         return user;
     }
 
-    Long id() { return id; }
-    String email() { return email; }
+    public Long id() { return id; }
+    public String email() { return email; }
+    public String passwordHash() { return passwordHash; }
+    public boolean active() { return active; }
+    public java.util.Set<String> roleCodes() { return roles.stream().map(RoleEntity::code).collect(java.util.stream.Collectors.toSet()); }
 }

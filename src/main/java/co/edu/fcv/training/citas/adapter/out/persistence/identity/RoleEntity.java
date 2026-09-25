@@ -15,4 +15,6 @@ class RoleEntity {
 
     protected RoleEntity() {
     }
+
+    public String code() { return code; }
 }
