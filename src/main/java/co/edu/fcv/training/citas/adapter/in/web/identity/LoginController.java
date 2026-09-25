@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import co.edu.fcv.training.citas.application.security.RefreshTokenPort;
 import co.edu.fcv.training.citas.adapter.out.persistence.identity.UserEntity;
 import co.edu.fcv.training.citas.adapter.out.persistence.identity.UserJpaRepository;
@@ -66,7 +68,8 @@ class LoginController {
                 .expiresAt(now.plus(accessTokenMinutes, ChronoUnit.MINUTES))
                 .subject(userId.toString()).claim("roles", roles)
                 .build();
-        return new LoginResponse(jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue(), refreshToken, "Bearer", accessTokenMinutes * 60);
+        return new LoginResponse(jwtEncoder.encode(JwtEncoderParameters.from(
+                JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue(), refreshToken, "Bearer", accessTokenMinutes * 60);
     }
 
     record LoginRequest(@NotBlank @Email String email, @NotBlank String password, String deviceInfo) {}

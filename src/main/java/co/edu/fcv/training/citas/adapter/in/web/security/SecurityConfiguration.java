@@ -20,10 +20,14 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import javax.crypto.SecretKey;
@@ -66,8 +70,17 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/admin/reschedule-requests/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/professional/**").hasRole("PROFESSIONAL")
                         .anyRequest().denyAll())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();
+    }
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var authorities = new JwtGrantedAuthoritiesConverter();
+        authorities.setAuthoritiesClaimName("roles");
+        authorities.setAuthorityPrefix("");
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authorities);
+        return converter;
     }
 
     @Bean
@@ -86,7 +99,9 @@ public class SecurityConfiguration {
 
     @Bean
     JwtEncoder jwtEncoder(SecretKey secret) {
-        JWKSource<SecurityContext> source = (selector, context) -> selector.select(new JWKSet(new OctetSequenceKey.Builder(secret).build()));
+        var signingKey = new OctetSequenceKey.Builder(secret).algorithm(JWSAlgorithm.HS256)
+                .keyUse(KeyUse.SIGNATURE).keyID("citas-access").build();
+        JWKSource<SecurityContext> source = (selector, context) -> java.util.List.of(signingKey);
         return new NimbusJwtEncoder(source);
     }
 
