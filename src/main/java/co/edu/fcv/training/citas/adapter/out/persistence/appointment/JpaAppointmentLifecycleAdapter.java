@@ -1,6 +1,7 @@
 package co.edu.fcv.training.citas.adapter.out.persistence.appointment;
 
 import co.edu.fcv.training.citas.application.appointment.AppointmentLifecyclePort;
+import co.edu.fcv.training.citas.application.appointment.AppointmentStatusChangedEvent;
 import co.edu.fcv.training.citas.domain.appointment.AppointmentLifecycleException;
 import jakarta.persistence.EntityManager;
 import java.sql.Timestamp;
@@ -9,13 +10,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 class JpaAppointmentLifecycleAdapter implements AppointmentLifecyclePort {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("America/Bogota");
     private final EntityManager entityManager;
-    JpaAppointmentLifecycleAdapter(EntityManager entityManager) { this.entityManager = entityManager; }
+    private final ApplicationEventPublisher events;
+    JpaAppointmentLifecycleAdapter(EntityManager entityManager, ApplicationEventPublisher events) { this.entityManager = entityManager; this.events = events; }
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +77,7 @@ class JpaAppointmentLifecycleAdapter implements AppointmentLifecyclePort {
                 VALUES (:appointment,:status,:patient,'USER',:reason)
                 """).setParameter("appointment", appointmentId).setParameter("status", statusId)
                 .setParameter("patient", patientUserId).setParameter("reason", reason).executeUpdate();
+        events.publishEvent(new AppointmentStatusChangedEvent(appointmentId, (String) values[1], "CANCELLED", "USER", patientUserId, java.time.Instant.now()));
     }
 
     private String summarySql() { return """

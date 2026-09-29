@@ -1,0 +1,11 @@
+{
+  "name": "WF-003-daily-operational-summary-MOCK",
+  "active": false,
+  "mock": true,
+  "nodes": [
+    {"name":"Daily schedule","type":"n8n-nodes-base.scheduleTrigger","parameters":{"rule":{"cronExpression":"0 0 7 * * *"}}},
+    {"name":"Mock operational summary","type":"n8n-nodes-base.code","parameters":{"jsCode":"return [{json:{mock:true,date:'2026-10-01',byLocation:[],reason:'API and Gmail credentials intentionally omitted'}}];"}}
+  ],
+  "connections": {"Daily schedule":{"main":[[{"node":"Mock operational summary","type":"main","index":0}]]}},
+  "credentials": {}
+}

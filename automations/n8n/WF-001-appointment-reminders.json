@@ -1,0 +1,12 @@
+{
+  "name": "WF-001-appointment-reminders-MOCK",
+  "active": false,
+  "mock": true,
+  "nodes": [
+    {"name":"Schedule Trigger","type":"n8n-nodes-base.scheduleTrigger","parameters":{"rule":{"interval":[{"field":"hours","hoursInterval":1}]}}},
+    {"name":"Mock API appointments","type":"n8n-nodes-base.code","parameters":{"jsCode":"return [{json:{appointmentId:1001,status:'APPROVED',scheduledStartAt:'2026-10-01T09:00:00-05:00',recipient:'synthetic@example.test'}}];"}},
+    {"name":"Mock Gmail","type":"n8n-nodes-base.code","parameters":{"jsCode":"return items.map(item => ({json:{sent:false,mock:true,reason:'Credentials intentionally omitted',appointmentId:item.json.appointmentId}}));"}}
+  ],
+  "connections": {"Schedule Trigger":{"main":[[{"node":"Mock API appointments","type":"main","index":0}]]},"Mock API appointments":{"main":[[{"node":"Mock Gmail","type":"main","index":0}]]}},
+  "credentials": {}
+}

@@ -3,6 +3,7 @@ package co.edu.fcv.training.citas.adapter.out.persistence.appointment;
 import co.edu.fcv.training.citas.application.appointment.AppointmentBookingPort;
 import co.edu.fcv.training.citas.application.appointment.BookAppointmentCommand;
 import co.edu.fcv.training.citas.application.appointment.BookedAppointment;
+import co.edu.fcv.training.citas.application.appointment.AppointmentStatusChangedEvent;
 import co.edu.fcv.training.citas.domain.appointment.AppointmentBookingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Tuple;
@@ -10,14 +11,16 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 class JpaAppointmentBookingAdapter implements AppointmentBookingPort {
     private static final ZoneId BUSINESS_ZONE = ZoneId.of("America/Bogota");
     private final EntityManager entityManager;
+    private final ApplicationEventPublisher events;
 
-    JpaAppointmentBookingAdapter(EntityManager entityManager) { this.entityManager = entityManager; }
+    JpaAppointmentBookingAdapter(EntityManager entityManager, ApplicationEventPublisher events) { this.entityManager = entityManager; this.events = events; }
 
     @Override
     @Transactional
@@ -63,15 +66,17 @@ class JpaAppointmentBookingAdapter implements AppointmentBookingPort {
 
         String status = general && !requiresApproval ? "APPROVED" : "REQUESTED";
         Number statusId = scalar("SELECT id FROM appointment_statuses WHERE code = :code", "code", status);
+        Number affiliationId = scalar("SELECT id FROM user_insurance_affiliations WHERE user_id=:patient AND is_current=TRUE ORDER BY valid_from DESC LIMIT 1", "patient", command.patientUserId());
         entityManager.createNativeQuery("""
                 INSERT INTO appointments (patient_user_id, professional_id, location_id, specialty_id,
-                  status_id, reason, scheduled_start_at, scheduled_end_at, created_by_user_id)
-                VALUES (:patient, :professional, :location, :specialty, :status, :reason, :startAt, :endAt, :patient)
+                  insurance_affiliation_id, status_id, reason, scheduled_start_at, scheduled_end_at, created_by_user_id)
+                VALUES (:patient, :professional, :location, :specialty, :insurance, :status, :reason, :startAt, :endAt, :patient)
                 """)
                 .setParameter("patient", command.patientUserId())
                 .setParameter("professional", command.professionalId())
                 .setParameter("location", command.locationId().shortValue())
                 .setParameter("specialty", command.specialtyId().shortValue())
+                .setParameter("insurance", affiliationId)
                 .setParameter("status", statusId)
                 .setParameter("reason", command.reason())
                 .setParameter("startAt", command.startAt())
@@ -87,7 +92,24 @@ class JpaAppointmentBookingAdapter implements AppointmentBookingPort {
                 VALUES (:appointment, :status, :patient, 'USER', :reason)
                 """).setParameter("appointment", id).setParameter("status", statusId)
                 .setParameter("patient", command.patientUserId()).setParameter("reason", command.reason()).executeUpdate();
+        events.publishEvent(new AppointmentStatusChangedEvent(id.longValue(), null, status, "USER", command.patientUserId(), java.time.Instant.now()));
         return new BookedAppointment(id.longValue(), status);
+    }
+
+    @Override
+    @Transactional
+    public void decide(Long adminUserId, Long appointmentId, boolean approve, String reason) {
+        if (!approve && (reason == null || reason.isBlank())) throw new AppointmentBookingException("REJECTION_REASON_REQUIRED");
+        Tuple appointment = one("SELECT a.status_id AS statusId, a.patient_user_id AS patientId, s.code AS previousStatus, a.scheduled_start_at AS startAt, a.scheduled_end_at AS endAt FROM appointments a JOIN appointment_statuses s ON s.id=a.status_id WHERE a.id=:id AND s.code='REQUESTED' FOR UPDATE", "id", appointmentId);
+        if (appointment == null) throw new AppointmentBookingException("APPOINTMENT_NOT_PENDING");
+        String next = approve ? "APPROVED" : "REJECTED";
+        Number nextId = scalar("SELECT id FROM appointment_statuses WHERE code=:code", "code", next);
+        entityManager.createNativeQuery("UPDATE appointments SET status_id=:status, approved_by_user_id=:admin, approved_at=CASE WHEN :approve = TRUE THEN NOW() ELSE NULL END WHERE id=:id")
+                .setParameter("status", nextId).setParameter("admin", adminUserId).setParameter("approve", approve).setParameter("id", appointmentId).executeUpdate();
+        if (!approve) entityManager.createNativeQuery("UPDATE professional_slots ps JOIN appointments a ON a.id=:id SET ps.appointment_id=NULL WHERE ps.appointment_id=:id").setParameter("id", appointmentId).executeUpdate();
+        entityManager.createNativeQuery("INSERT INTO appointment_status_history (appointment_id,status_id,changed_by_user_id,change_source,reason) VALUES (:appointment,:status,:admin,'ADMIN',:reason)")
+                .setParameter("appointment", appointmentId).setParameter("status", nextId).setParameter("admin", adminUserId).setParameter("reason", reason).executeUpdate();
+        events.publishEvent(new AppointmentStatusChangedEvent(appointmentId, (String) appointment.get("previousStatus"), next, "ADMIN", adminUserId, java.time.Instant.now()));
     }
 
     private boolean offerIsValid(BookAppointmentCommand command, Tuple ignored) {

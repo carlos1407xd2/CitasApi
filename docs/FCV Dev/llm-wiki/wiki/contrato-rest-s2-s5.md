@@ -35,10 +35,9 @@ actualizar la especificación Scrum correspondiente.
    El usuario se obtiene del sujeto autenticado y no de `patientUserId` en el
    payload. General responde `APPROVED`; especializada responde `REQUESTED`;
    un slot ocupado responde `409 SLOT_NOT_AVAILABLE`.
-   `POST /api/v1/auth/login` recibe `email` y `password` y devuelve un access
-   JWT de corta duración con el sujeto de usuario y roles. El secreto se lee
-   exclusivamente desde `JWT_ACCESS_SECRET`; refresh/logout aún requieren su
-   siguiente incremento antes de declararse completos.
+   `POST /api/v1/auth/login` recibe `email` y `password` y devuelve access y
+   refresh JWT. El secreto se lee exclusivamente desde variables de entorno;
+   refresh/logout revocan el hash persistido del refresh token.
 2. S3: catálogos, profesionales, disponibilidad, búsqueda, reservas y decisión.
 3. S4: perfil, recuperación, EPS/planes, ciclo de vida, agenda e historial.
 4. S5: OpenAPI y webhook post-commit con payload sin PII.
@@ -88,3 +87,19 @@ Las operaciones del profesional sobre su propia agenda son:
 - `DELETE /api/v1/professional/availability-blocks/{id}` elimina el bloque y sus slots libres. Los bloques con alguna cita no se pueden modificar ni eliminar y responden `409 BLOCK_HAS_APPOINTMENTS`.
 
 Estas rutas requieren rol `PROFESSIONAL`; el usuario se obtiene del sujeto JWT y nunca se acepta `professionalId` en el payload. Los solapamientos responden `409 BLOCK_OVERLAP` y las ubicaciones no asignadas responden `404 LOCATION_NOT_ASSIGNED`.
+
+## Contrato S4–S6 consolidado
+
+| Área | Rutas principales | Autorización |
+|---|---|---|
+| Perfil y recuperación | `GET/PUT /api/v1/profile`, `POST /api/v1/auth/password/request`, `POST /api/v1/auth/password/confirm` | USER / público controlado |
+| Citas USER | `GET /api/v1/appointments`, `GET /{id}`, `POST /`, `cancel`, `reschedule-requests` | USER + ownership |
+| Decisiones ADMIN | `GET /api/v1/admin/inbox`, `POST /admin/appointments/{id}/approve|reject`, `POST /admin/reschedule-requests/{id}/approve|reject` | ADMIN |
+| Catálogos | `GET/POST/PUT/PATCH /api/v1/admin/catalogs/{specialties,eps,plans}` | ADMIN |
+| Profesionales | `POST /api/v1/admin/professionals`, asignaciones de `specialties` y `locations`, activación | ADMIN |
+| Agenda | bloques y `GET/PATCH /api/v1/professional/appointments/{id}/closure` | PROFESSIONAL + ownership |
+| Auditoría | `GET /api/v1/admin/audit/appointments/{id}/history` | ADMIN |
+
+El esquema OpenAPI generado por Springdoc en `/v3/api-docs` es la fuente
+ejecutable del contrato; el cliente TypeScript de `citas-web/src/lib/api.ts`
+mantiene las mismas rutas, payloads y códigos de estado.

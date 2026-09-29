@@ -10,12 +10,21 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/professional/appointments")
 class ProfessionalAppointmentController {
     private final ProfessionalAppointmentPort appointments;
     ProfessionalAppointmentController(ProfessionalAppointmentPort appointments) { this.appointments = appointments; }
+
+    @org.springframework.web.bind.annotation.GetMapping
+    java.util.List<ProfessionalAppointmentPort.AgendaAppointment> agenda(Authentication authentication,
+            @org.springframework.web.bind.annotation.RequestParam(required=false) LocalDate from,
+            @org.springframework.web.bind.annotation.RequestParam(required=false) LocalDate to) {
+        LocalDate start = from == null ? LocalDate.now() : from;
+        return appointments.agenda(Long.valueOf(authentication.getName()), start, to == null ? start.plusDays(7) : to);
+    }
 
     @PatchMapping("/{id}/closure")
     ResponseEntity<Void> close(Authentication authentication, @PathVariable Long id, @Valid @RequestBody ClosureRequest request) {

@@ -17,12 +17,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.persistence.EntityManager;
 
 @RestController
 @RequestMapping("/api/v1/admin/professionals")
 class AdminProfessionalController {
     private final ProfessionalAdministrationPort professionals;
-    AdminProfessionalController(ProfessionalAdministrationPort professionals) { this.professionals = professionals; }
+    private final EntityManager entityManager;
+    AdminProfessionalController(ProfessionalAdministrationPort professionals, EntityManager entityManager) { this.professionals = professionals; this.entityManager = entityManager; }
+
+    @org.springframework.web.bind.annotation.GetMapping
+    java.util.List<ProfessionalSummary> list() {
+        return entityManager.createNativeQuery("SELECT p.id,u.first_name,u.last_name,u.email,p.professional_code,p.license_number,p.active FROM professionals p JOIN users u ON u.id=p.user_id ORDER BY u.last_name,u.first_name").getResultList().stream().map(raw -> { Object[] r=(Object[])raw; return new ProfessionalSummary(((Number)r[0]).longValue(),(String)r[1],(String)r[2],(String)r[3],(String)r[4],(String)r[5],(Boolean)r[6]); }).toList();
+    }
 
     @PostMapping
     ResponseEntity<ProfessionalAdministrationPort.Professional> create(@Valid @RequestBody CreateRequest request) {
@@ -57,4 +64,5 @@ class AdminProfessionalController {
     record SpecialtyAssignmentRequest(Long specialtyId, boolean primary) {}
     record LocationRequest(@NotEmpty List<Long> locationIds) {}
     record ActiveRequest(boolean active) {}
+    record ProfessionalSummary(Long id,String firstName,String lastName,String email,String professionalCode,String licenseNumber,Boolean active) {}
 }

@@ -62,13 +62,19 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/health/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                                 "/api/v1/auth/register", "/api/v1/catalogs/insurance-plans",
+                                "/api/v1/auth/password/**",
                                 "/api/v1/catalogs/locations", "/api/v1/catalogs/specialties",
                                 "/api/v1/availability", "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout")
                         .permitAll()
                         .requestMatchers("/api/v1/appointments/**").hasRole("USER")
                         .requestMatchers("/api/v1/admin/professionals/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/appointments/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/inbox/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/catalogs/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/audit/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/admin/reschedule-requests/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/professional/**").hasRole("PROFESSIONAL")
+                        .requestMatchers("/api/v1/profile/**").hasRole("USER")
                         .anyRequest().denyAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();

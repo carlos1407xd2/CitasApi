@@ -38,3 +38,8 @@
 - 2026-09-25 — LEARN — Se añadió login JWT access y validación Bearer con roles
   desde `user_roles`; la API arrancó contra MySQL y health respondió `200`.
   — Resultado: la reserva ya tiene la frontera de ownership definida.
+- 2026-09-29 — DECISIÓN — Se documentó el modelo relacional propio hasta 3FN,
+  incluyendo dependencias funcionales, slots, reprogramación y auditoría.
+- 2026-09-29 — HECHO — Se consolidó el contrato REST S4–S6 y se verificó el
+  recorrido Docker de autenticación, perfil, catálogos y disponibilidad.
+- 2026-09-29 — HECHO — Se comparó el modelo propio 3FN con la referencia del trainer y se documentaron diferencias compatibles, incluida la outbox V2.

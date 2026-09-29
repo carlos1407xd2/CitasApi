@@ -31,6 +31,11 @@ implementación funcional, por lo que ninguna HU se marca como completada.
 
 ## Decisiones o incógnitas pendientes
 
+La matriz de estado verificable del incremento actual está en
+`../../../../HU_STATUS_MATRIX.md` y la evidencia de implementación en
+`../../../../EVIDENCIA_IMPLEMENTACION_HU.md`. Ninguna HU se considera cerrada
+solo por tener un endpoint: el cierre requiere CA, DoD y pruebas evidenciadas.
+
 - La fuente disponible no define el contrato HTTP de registro ni la política
   para `membership_number` cuando la afiliación inicial solo recibe
   `insurancePlanId`. [[DEC-001-afiliacion-inicial-opcional]]

@@ -1,0 +1,11 @@
+{
+  "name": "WF-002-status-notifications-MOCK",
+  "active": false,
+  "mock": true,
+  "nodes": [
+    {"name":"Webhook status changed","type":"n8n-nodes-base.webhook","parameters":{"httpMethod":"POST","path":"appointment-status-changed-mock","responseMode":"onReceived"}},
+    {"name":"Mock Gmail notification","type":"n8n-nodes-base.code","parameters":{"jsCode":"return items.map(item => ({json:{sent:false,mock:true,received:item.json,reason:'Credentials intentionally omitted'}}));"}}
+  ],
+  "connections": {"Webhook status changed":{"main":[[{"node":"Mock Gmail notification","type":"main","index":0}]]}},
+  "credentials": {}
+}

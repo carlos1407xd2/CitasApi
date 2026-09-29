@@ -62,5 +62,11 @@ public class UserEntity {
     public String email() { return email; }
     public String passwordHash() { return passwordHash; }
     public boolean active() { return active; }
+    public String firstName() { return firstName; }
+    public String lastName() { return lastName; }
+    public String documentType() { return documentType; }
+    public String documentNumber() { return documentNumber; }
+    public String phone() { return phone; }
+    public void updateProfile(String firstName, String lastName, String phone) { this.firstName = firstName; this.lastName = lastName; this.phone = phone; }
     public java.util.Set<String> roleCodes() { return roles.stream().map(RoleEntity::code).collect(java.util.stream.Collectors.toSet()); }
 }
