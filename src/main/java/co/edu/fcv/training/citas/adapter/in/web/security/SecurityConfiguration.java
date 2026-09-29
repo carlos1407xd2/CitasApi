@@ -120,7 +120,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource(
             @Value("${app.security.frontend-origin}") String frontendOrigin) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(frontendOrigin));
+        configuration.setAllowedOrigins(List.of(frontendOrigin.split(",")));
         configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Location"));
